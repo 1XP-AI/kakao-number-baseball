@@ -12,14 +12,14 @@ export class NumberBaseballBot {
 
   async handle(event: ChatEvent): Promise<string | null> {
     const message = event.message.trim();
-    if (!message.startsWith('!')) return null;
+    if (!message.startsWith('@')) return null;
 
-    if (message === '!도움말') return this.help();
-    if (message === '!상태') return this.status(event.chatId);
-    if (message === '!랭킹') return this.rank();
-    if (message === '!포기') return this.giveUp(event.chatId, event.userId);
-    if (message === '!숫자야구' || message === '!숫자야구 4') {
-      const digits: DigitLength = message === '!숫자야구 4' ? 4 : 3;
+    if (message === '@도움말') return this.help();
+    if (message === '@상태') return this.status(event.chatId);
+    if (message === '@랭킹') return this.rank();
+    if (message === '@포기') return this.giveUp(event.chatId, event.userId);
+    if (message === '@숫자야구' || message === '@숫자야구 4') {
+      const digits: DigitLength = message === '@숫자야구 4' ? 4 : 3;
       return this.start(event.chatId, digits);
     }
 
@@ -34,12 +34,12 @@ export class NumberBaseballBot {
   private help() {
     return [
       '숫자야구 명령어',
-      '- !숫자야구 → 3자리 시작',
-      '- !숫자야구 4 → 4자리 시작',
-      '- !123 / !1234 → 추측',
-      '- !상태 → 현재 게임',
-      '- !랭킹 → 누적 랭킹',
-      '- !포기 → 현재 게임 종료',
+      '- @숫자야구 → 3자리 시작',
+      '- @숫자야구 4 → 4자리 시작',
+      '- @123 / @1234 → 추측',
+      '- @상태 → 현재 게임',
+      '- @랭킹 → 누적 랭킹',
+      '- @포기 → 현재 게임 종료',
     ].join('\n');
   }
 
@@ -60,7 +60,7 @@ export class NumberBaseballBot {
   private async status(chatId: string) {
     const db = await this.store.db();
     const game = db.data.games[chatId];
-    if (!game) return '진행 중인 게임이 없어. !숫자야구 또는 !숫자야구 4 로 시작해.';
+    if (!game) return '진행 중인 게임이 없어. @숫자야구 또는 @숫자야구 4 로 시작해.';
     const recent = game.history.slice(-3).map((item) => `${item.guess} → ${item.strike}S ${item.ball}B`).join('\n');
     return [
       `진행 중: ${game.digits}자리 숫자야구`,
@@ -96,7 +96,7 @@ export class NumberBaseballBot {
   private async guess(chatId: string, userId: string, guess: string) {
     const db = await this.store.db();
     const game = db.data.games[chatId];
-    if (!game) return '먼저 !숫자야구 또는 !숫자야구 4 로 게임을 시작해.';
+    if (!game) return '먼저 @숫자야구 또는 @숫자야구 4 로 게임을 시작해.';
     if (!isValidGuess(guess, game.digits)) return `${game.digits}자리 중복 없는 숫자로 입력해줘.`;
 
     const result = judgeGuess(game.secret, guess);

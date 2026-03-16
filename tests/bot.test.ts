@@ -14,17 +14,17 @@ describe('bot flow', () => {
     const store = new Store(dbPath);
     const bot = new NumberBaseballBot(store);
 
-    const startReply = await bot.handle({ chatId: 'room-1', userId: 'alice', message: '!숫자야구' });
+    const startReply = await bot.handle({ chatId: 'room-1', userId: 'alice', message: '@숫자야구' });
     expect(startReply).toContain('숫자야구 시작');
 
     const db = await store.db();
     db.data.games['room-1'].secret = '427';
     await db.write();
 
-    const guessReply = await bot.handle({ chatId: 'room-1', userId: 'alice', message: '!472' });
+    const guessReply = await bot.handle({ chatId: 'room-1', userId: 'alice', message: '@472' });
     expect(guessReply).toBe('472 → 1S 2B');
 
-    const winReply = await bot.handle({ chatId: 'room-1', userId: 'alice', message: '!427' });
+    const winReply = await bot.handle({ chatId: 'room-1', userId: 'alice', message: '@427' });
     expect(winReply).toContain('정답! 427');
   });
 });
