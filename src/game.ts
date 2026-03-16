@@ -18,7 +18,11 @@ export function generateSecret(digits: DigitLength): string {
 }
 
 export function isValidGuess(input: string, digits: DigitLength): boolean {
-  return new RegExp(`^[0-9]{${digits}}$`).test(input) && new Set(input).size === digits;
+  return (
+    new RegExp(`^[0-9]{${digits}}$`).test(input)
+    && input[0] !== '0'
+    && new Set(input).size === digits
+  );
 }
 
 export function judgeGuess(secret: string, guess: string) {

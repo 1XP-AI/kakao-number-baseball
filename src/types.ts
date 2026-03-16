@@ -17,6 +17,7 @@ export interface ActiveGame {
 
 export interface UserStats {
   userId: string;
+  displayName?: string;
   wins: number;
   losses: number;
   gamesPlayed: number;
@@ -31,5 +32,6 @@ export interface DatabaseSchema {
 export interface ChatEvent {
   chatId: string;
   userId: string;
+  userName?: string;
   message: string;
 }

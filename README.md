@@ -5,11 +5,14 @@
 ## 핵심 기능
 
 - 방별 1개 활성 게임 유지
+- 이미 진행 중인 게임은 덮어쓰지 않고 안내 메시지 반환
 - `@숫자야구`로 3자리 게임 시작
 - `@숫자야구 4`로 4자리 게임 시작
 - `@123`, `@1234`로 모바일 친화적 추측
+- 숫자 추측은 LLM 없이 내부 룰 엔진으로 즉시 판정
 - `@상태`, `@랭킹`, `@포기`, `@도움말` 지원
 - 유저별 누적 전적 저장: wins, losses, gamesPlayed, guesses, winRate
+- 유저 이름(displayName)을 함께 저장해 승리 메시지/랭킹 가독성 개선
 - JSON 파일 기반 로컬 영속화
 - OpenClaw/Kakao 메시지 어댑터에 붙이기 쉬운 인터페이스 제공
 
@@ -28,6 +31,7 @@
 ```bash
 npm install
 npm test
+npm run build
 ```
 
 ## 코드 구조
@@ -49,6 +53,7 @@ import { handleChatMessage } from './src';
 const reply = await handleChatMessage({
   chatId: 'kakaotalk:chat:123',
   userId: 'alice',
+  userName: '이진우',
   message: '@숫자야구',
 });
 ```
