@@ -1,0 +1,30 @@
+{
+  "name": "kakao-number-baseball",
+  "version": "1.0.0",
+  "description": "KakaoTalk number baseball MVP",
+  "type": "commonjs",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/index.ts",
+    "test": "vitest run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/1XP-AI/kakao-number-baseball.git"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/1XP-AI/kakao-number-baseball/issues"
+  },
+  "homepage": "https://github.com/1XP-AI/kakao-number-baseball#readme",
+  "devDependencies": {
+    "@types/node": "^24.5.2",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.4"
+  },
+  "dependencies": {
+    "lowdb": "^7.0.1"
+  }
+}
