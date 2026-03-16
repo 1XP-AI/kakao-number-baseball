@@ -1,6 +1,6 @@
 import { generateSecret, isValidGuess, judgeGuess } from './game';
 import { ChatEvent, DigitLength } from './types';
-import { Store } from './store';
+import { DEFAULT_DB_PATH, Store } from './store';
 
 function formatHomeRunRate(wins: number, guesses: number) {
   if (guesses === 0) return '0.0';
@@ -12,6 +12,7 @@ export class NumberBaseballBot {
 
   async handle(event: ChatEvent): Promise<string | null> {
     const message = event.message.trim();
+    console.info(`[number-baseball] event chatId=${event.chatId} userId=${event.userId} userName=${event.userName ?? '-'} message=${message} db=${DEFAULT_DB_PATH}`);
     if (!message.startsWith('@')) return null;
 
     if (message === '@도움말') return this.help();
@@ -93,6 +94,7 @@ export class NumberBaseballBot {
       })
       .slice(0, 10);
 
+    console.info(`[number-baseball] rank db=${DEFAULT_DB_PATH} statsKeys=${Object.keys(db.data.stats).join(',') || '(none)'}`);
     if (rows.length === 0) return '아직 랭킹 데이터가 없어.';
 
     return ['숫자야구 랭킹', ...rows.map((row, index) => {
@@ -128,6 +130,7 @@ export class NumberBaseballBot {
 
     const stats = await this.store.getStats(userId, userName);
     stats.guesses += 1;
+    console.info(`[number-baseball] guess db=${DEFAULT_DB_PATH} userId=${userId} displayName=${userName ?? '-'} wins=${stats.wins} guesses=${stats.guesses}`);
 
     if (result.strike === game.digits) {
       stats.wins += 1;
