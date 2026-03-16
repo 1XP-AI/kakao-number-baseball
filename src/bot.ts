@@ -2,9 +2,9 @@ import { generateSecret, isValidGuess, judgeGuess } from './game';
 import { ChatEvent, DigitLength } from './types';
 import { Store } from './store';
 
-function formatWinRate(wins: number, gamesPlayed: number) {
-  if (gamesPlayed === 0) return '0.0';
-  return ((wins / gamesPlayed) * 100).toFixed(1);
+function formatHomeRunRate(wins: number, guesses: number) {
+  if (guesses === 0) return '0.0';
+  return ((wins / guesses) * 100).toFixed(1);
 }
 
 export class NumberBaseballBot {
@@ -84,14 +84,20 @@ export class NumberBaseballBot {
   private async rank() {
     const db = await this.store.db();
     const rows = Object.values(db.data.stats)
-      .sort((a, b) => b.wins - a.wins || (b.wins / Math.max(b.gamesPlayed, 1)) - (a.wins / Math.max(a.gamesPlayed, 1)))
+      .sort((a, b) => {
+        const winsDiff = b.wins - a.wins;
+        if (winsDiff !== 0) return winsDiff;
+        const homeRunDiff = (b.wins / Math.max(b.guesses, 1)) - (a.wins / Math.max(a.guesses, 1));
+        if (homeRunDiff !== 0) return homeRunDiff;
+        return a.guesses - b.guesses;
+      })
       .slice(0, 10);
 
     if (rows.length === 0) return '아직 랭킹 데이터가 없어.';
 
     return ['숫자야구 랭킹', ...rows.map((row, index) => {
       const name = row.displayName ?? row.userId;
-      return `${index + 1}. ${name} - ${row.wins}승 ${row.losses}패 · 승률 ${formatWinRate(row.wins, row.gamesPlayed)}% · 추측 ${row.guesses}회`;
+      return `${index + 1}. ${name} - ${row.wins}승 · 추측 ${row.guesses}회 · 홈런율 ${formatHomeRunRate(row.wins, row.guesses)}%`;
     })].join('\n');
   }
 
@@ -100,9 +106,7 @@ export class NumberBaseballBot {
     const game = db.data.games[chatId];
     if (!game) return '포기할 게임이 없어.';
 
-    const stats = await this.store.getStats(userId, userName);
-    stats.losses += 1;
-    stats.gamesPlayed += 1;
+    await this.store.getStats(userId, userName);
     delete db.data.games[chatId];
     await db.write();
     return `게임 종료. 정답은 ${game.secret} 였어.`;
@@ -127,7 +131,6 @@ export class NumberBaseballBot {
 
     if (result.strike === game.digits) {
       stats.wins += 1;
-      stats.gamesPlayed += 1;
       const tries = game.guessCount;
       delete db.data.games[chatId];
       await db.write();

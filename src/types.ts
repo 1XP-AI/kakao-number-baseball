@@ -19,8 +19,6 @@ export interface UserStats {
   userId: string;
   displayName?: string;
   wins: number;
-  losses: number;
-  gamesPlayed: number;
   guesses: number;
 }
 

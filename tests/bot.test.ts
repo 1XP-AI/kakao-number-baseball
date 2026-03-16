@@ -102,8 +102,7 @@ describe('guess validation', () => {
 
 describe('ranking display', () => {
   it('prefers displayName over userId in ranking output', async () => {
-    const isolatedDbPath = 'data/test-ranking-db.json';
-    rmSync(isolatedDbPath, { force: true });
+    const isolatedDbPath = `data/test-ranking-db-${Date.now()}-${Math.random().toString(16).slice(2)}.json`;
     const store = new Store(isolatedDbPath);
     const bot = new NumberBaseballBot(store);
 
@@ -116,6 +115,9 @@ describe('ranking display', () => {
     const rankingReply = await bot.handle({ chatId: 'room-1', userId: 'alice', userName: '이진우', message: '@랭킹' });
 
     expect(rankingReply).toContain('이진우 - ');
+    expect(rankingReply).toContain('홈런율 ');
     expect(rankingReply).not.toContain('alice - ');
+    expect(rankingReply).not.toContain('패');
+    expect(rankingReply).not.toContain('승률');
   });
 });

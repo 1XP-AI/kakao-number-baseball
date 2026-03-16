@@ -20,7 +20,7 @@ export class Store {
   async getStats(userId: string, displayName?: string): Promise<UserStats> {
     const db = await this.db();
     if (!db.data.stats[userId]) {
-      db.data.stats[userId] = { userId, displayName, wins: 0, losses: 0, gamesPlayed: 0, guesses: 0 };
+      db.data.stats[userId] = { userId, displayName, wins: 0, guesses: 0 };
       await db.write();
     } else if (displayName && db.data.stats[userId].displayName !== displayName) {
       db.data.stats[userId].displayName = displayName;
