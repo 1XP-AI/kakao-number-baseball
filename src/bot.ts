@@ -144,7 +144,8 @@ export class NumberBaseballBot {
   }
 }
 
+const sharedBot = new NumberBaseballBot();
+
 export async function handleChatMessage(event: ChatEvent) {
-  const bot = new NumberBaseballBot();
-  return bot.handle(event);
+  return sharedBot.handle(event);
 }
