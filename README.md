@@ -13,7 +13,7 @@
 - `@상태`, `@랭킹`, `@포기`, `@도움말` 지원
 - 유저별 누적 전적 저장: wins, guesses, homeRunRate(= wins / guesses)
 - 유저 이름(displayName)을 함께 저장해 승리 메시지/랭킹 가독성 개선
-- JSON 파일 기반 로컬 영속화
+- JSON 파일 기반 로컬 영속화 (`/home/jjangg96/.openclaw/workspace/skills/number-baseball/data/db.json` 고정)
 - OpenClaw/Kakao 메시지 어댑터에 붙이기 쉬운 인터페이스 제공
 
 ## 명령어

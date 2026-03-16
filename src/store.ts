@@ -1,5 +1,5 @@
 import { existsSync, mkdirSync } from 'node:fs';
-import { dirname } from 'node:path';
+import { dirname, resolve } from 'node:path';
 import { JSONFilePreset } from 'lowdb/node';
 import { DatabaseSchema, UserStats } from './types';
 
@@ -8,8 +8,10 @@ const defaultData: DatabaseSchema = {
   stats: {},
 };
 
+const DEFAULT_DB_PATH = resolve(__dirname, '..', 'data', 'db.json');
+
 export class Store {
-  constructor(private filePath = 'data/db.json') {}
+  constructor(private filePath = DEFAULT_DB_PATH) {}
 
   async db() {
     const dir = dirname(this.filePath);

@@ -73,7 +73,7 @@ Good patterns:
 If asked to build or wire this into code:
 
 1. Prefer a small deterministic game engine over prompt-only play.
-2. Persist room/game/user state in JSON or sqlite.
+2. Persist room/game/user state in JSON or sqlite. For this repo, use the skill-folder-local file `/home/jjangg96/.openclaw/workspace/skills/number-baseball/data/db.json` as the single default store.
 3. Keep parsing logic separate from transport/channel glue.
 4. For KakaoTalk/OpenClaw integration, treat incoming message text as command input and return plain reply text.
 5. Do not require bot-name mention for these commands if the user explicitly wants command-triggered gameplay.
