@@ -11,12 +11,17 @@ const defaultData: DatabaseSchema = {
 const DEFAULT_DB_PATH = resolve(__dirname, '..', 'data', 'db.json');
 
 export class Store {
+  private _db: Awaited<ReturnType<typeof JSONFilePreset<DatabaseSchema>>> | null = null;
+
   constructor(private filePath = DEFAULT_DB_PATH) {}
 
   async db() {
-    const dir = dirname(this.filePath);
-    if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
-    return JSONFilePreset<DatabaseSchema>(this.filePath, defaultData);
+    if (!this._db) {
+      const dir = dirname(this.filePath);
+      if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
+      this._db = await JSONFilePreset<DatabaseSchema>(this.filePath, defaultData);
+    }
+    return this._db;
   }
 
   async getStats(userId: string, displayName?: string): Promise<UserStats> {
