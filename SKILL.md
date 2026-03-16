@@ -45,7 +45,7 @@ Track at minimum:
   - wins
   - guesses
   - homeRunRate
-  - optional displayName for chat-friendly ranking output
+  - displayName (use `SenderName` for player-facing output; fall back to `SenderId` only if missing)
 
 ## Ranking Rules
 
@@ -81,6 +81,7 @@ If asked to build or wire this into code:
 7. Fast-path these commands before the normal LLM reply pipeline when possible; `@숫자야구`, `@숫자야구 4`, `@123`, `@1234`, `@상태`, `@랭킹`, `@포기`, `@도움말` should be handled by deterministic code, not by prompt reasoning.
 8. Reject guesses with wrong digit length, duplicate digits, or leading zeroes.
 9. Do not silently overwrite an active room game when a new start command arrives; return a compact guidance message instead.
+10. In KakaoTalk/OpenClaw integrations, use `SenderName` for player-facing display (winner messages, ranking rows, status labels) and use `SenderId` only as the stable internal key.
 
 ## File/Repo Context
 
