@@ -82,6 +82,9 @@ If asked to build or wire this into code:
 8. Reject guesses with wrong digit length, duplicate digits, or leading zeroes.
 9. Do not silently overwrite an active room game when a new start command arrives; return a compact guidance message instead.
 10. In KakaoTalk/OpenClaw integrations, use `SenderName` for player-facing display (winner messages, ranking rows, status labels) and use `SenderId` only as the stable internal key.
+11. Treat a win event (`정답! ... 승리 ...`) as a deterministic persistence point: update stats and remove the active game in the same code path before returning the reply.
+12. Use `/home/jjangg96/.openclaw/workspace/skills/number-baseball/data/db.json` as the single source of truth for both ranking reads and writes.
+13. When runtime behavior diverges from repo behavior, add gateway/plugin logs first and verify the actual loaded DB path and payload (`SenderId`, `SenderName`, wins, guesses) before changing game logic again.
 
 ## File/Repo Context
 
