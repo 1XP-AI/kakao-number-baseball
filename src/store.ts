@@ -8,7 +8,7 @@ const defaultData: DatabaseSchema = {
   stats: {},
 };
 
-const DEFAULT_DB_PATH = resolve(__dirname, '..', 'data', 'db.json');
+export const DEFAULT_DB_PATH = resolve(__dirname, '..', 'data', 'db.json');
 
 export class Store {
   private _db: Awaited<ReturnType<typeof JSONFilePreset<DatabaseSchema>>> | null = null;
