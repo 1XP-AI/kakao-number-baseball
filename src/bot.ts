@@ -12,6 +12,17 @@ export class NumberBaseballBot {
 
   async handle(event: ChatEvent): Promise<string | null> {
     const message = event.message.trim();
+
+    // Bare number guess (no @ prefix) — only when game is active
+    if (/^[0-9]{3,4}$/.test(message)) {
+      const db = await this.store.db();
+      const game = db.data.games[event.chatId];
+      if (game && message.length === game.digits) {
+        return this.guess(event.chatId, event.userId, message, event.userName);
+      }
+      return null;
+    }
+
     if (!message.startsWith('@')) return null;
 
     if (message === '@도움말') return this.help();
