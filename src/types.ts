@@ -1,4 +1,4 @@
-export type DigitLength = 3 | 4;
+export type DigitLength = 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
 export interface ActiveGame {
   chatId: string;

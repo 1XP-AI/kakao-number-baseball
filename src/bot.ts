@@ -15,7 +15,7 @@ export class NumberBaseballBot {
     console.info(`[number-baseball] event chatId=${event.chatId} userId=${event.userId} userName=${event.userName ?? '-'} message=${message} db=${DEFAULT_DB_PATH}`);
 
     // Bare number guess (no @ prefix) — only when game is active
-    if (/^[0-9]{3,4}$/.test(message)) {
+    if (/^[0-9]{3,9}$/.test(message)) {
       const db = await this.store.db();
       const game = db.data.games[event.chatId];
       if (game && message.length === game.digits) {
@@ -30,13 +30,15 @@ export class NumberBaseballBot {
     if (message === '@상태') return this.status(event.chatId);
     if (message === '@랭킹') return this.rank();
     if (message === '@포기') return this.giveUp(event.chatId, event.userId, event.userName);
-    if (message === '@숫자야구' || message === '@숫자야구 4') {
-      const digits: DigitLength = message === '@숫자야구 4' ? 4 : 3;
-      return this.start(event.chatId, digits);
+    const startMatch = message.match(/^@숫자야구(?:\s+(\d+))?$/);
+    if (startMatch) {
+      const n = startMatch[1] ? parseInt(startMatch[1], 10) : 3;
+      if (n < 3 || n > 9) return '3~9자리만 가능해.';
+      return this.start(event.chatId, n as DigitLength);
     }
 
     const guess = message.slice(1);
-    if (/^[0-9]{3,4}$/.test(guess)) {
+    if (/^[0-9]{3,9}$/.test(guess)) {
       return this.guess(event.chatId, event.userId, guess, event.userName);
     }
 
@@ -46,9 +48,9 @@ export class NumberBaseballBot {
   private help() {
     return [
       '숫자야구 명령어',
-      '- @숫자야구 → 3자리 시작',
-      '- @숫자야구 4 → 4자리 시작',
-      '- @123 / @1234 → 추측',
+      '- @숫자야구 → 3자리 시작 (기본)',
+      '- @숫자야구 N → N자리 시작 (3~9)',
+      '- @123 또는 123 → 추측 (게임 중 @생략 가능)',
       '- @상태 → 현재 게임',
       '- @랭킹 → 누적 랭킹',
       '- @포기 → 현재 게임 종료',
@@ -130,7 +132,7 @@ export class NumberBaseballBot {
     const game = db.data.games[chatId];
     if (!game) return '먼저 @숫자야구 또는 @숫자야구 4 로 게임을 시작해.';
     if (guess.length !== game.digits) {
-      const example = game.digits === 3 ? '@123' : '@1234';
+      const example = '1'.repeat(game.digits).split('').map((_, i) => i + 1).join('').slice(0, game.digits);
       return `지금은 ${game.digits}자리 게임이야. ${example} 형식으로 입력해줘.`;
     }
     if (!isValidGuess(guess, game.digits)) return `${game.digits}자리 중복 없는 숫자로 입력해줘. 맨 앞자리는 0이 아니야.`;
